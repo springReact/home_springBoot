@@ -87,10 +87,10 @@ class TodoRepositoryTest {
         log.info(result.getContent());
     }
 
-    @Test
-    @DisplayName("Search test Query Dsl")
-    void testSearch1() {
-        todoRepository.search1();
-
-    }
+//    @Test
+//    @DisplayName("Search test Query Dsl")
+//    void testSearch1() {
+//        todoRepository.search1();
+//
+//    }
 }

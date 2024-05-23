@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.zerock.apiserver.dto.PageRequestDTO;
 import org.zerock.apiserver.dto.TodoDTO;
 
 import java.time.LocalDate;
@@ -36,5 +37,11 @@ class TodoServiceImplTest {
         log.info(todoService.register(todoDTO));
     }
 
+    @Test
+    @DisplayName("Page List get")
+    void testGetList() {
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(11).build();
 
+        log.info(todoService.getList(pageRequestDTO));
+    }
 }
