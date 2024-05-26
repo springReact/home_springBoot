@@ -11,10 +11,13 @@ public interface TodoService {
 
     TodoDTO get(Long tno);
 
+    @Transactional
     Long register(TodoDTO dto);
 
+    @Transactional
     void modify(TodoDTO dto);
 
+    @Transactional
     void remove(Long tno);
 
     PageResponseDTO<TodoDTO> getList(PageRequestDTO pageRequestDTO);

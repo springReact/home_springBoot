@@ -12,7 +12,6 @@ import org.zerock.apiserver.repository.TodoRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Log4j2
