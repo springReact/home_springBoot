@@ -5,8 +5,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Transactional;
 import org.zerock.apiserver.domain.Product;
+import org.zerock.apiserver.dto.PageRequestDTO;
 
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.UUID;
 
 @SpringBootTest
@@ -19,15 +27,93 @@ class ProductRepositoryTest {
     @Test
     @DisplayName("Insert Test")
     void testInsert() {
-        Product product = Product.builder()
-                .pname("Test ")
-                .pdesc("Test Desc")
-                .price(1000)
-                .build();
 
-        product.addImageString(UUID.randomUUID() + "_" + "IMAGE1.jpg");
-        product.addImageString(UUID.randomUUID() + "_" + "IMAGE2.jpg");
+        for (int i = 0; i < 10; i++) {
+
+
+            Product product = Product.builder()
+                    .pname("Test ")
+                    .pdesc("Test Desc")
+                    .price(1000)
+                    .build();
+
+            product.addImageString(UUID.randomUUID() + "_" + "IMAGE1.jpg");
+            product.addImageString(UUID.randomUUID() + "_" + "IMAGE2.jpg");
+
+            productRepository.save(product);
+        }
+    }
+
+    @Transactional
+    @Test
+    @DisplayName("Read Test")
+    void testRead() {
+        Long pno = 2L;
+
+        Optional<Product> result = productRepository.findById(pno);
+
+        Product product = result.orElseThrow();
+
+        log.info(product);
+        log.info(product.getImageList());
+
+    }
+
+    @Transactional
+    @Test
+    @DisplayName("Read Test2")
+    void testRead2() {
+        Long pno = 2L;
+
+        Optional<Product> result = productRepository.selectOne(pno);
+
+        Product product = result.orElseThrow();
+
+        log.info(product);
+        log.info(product.getImageList());
+
+    }
+
+    @Transactional
+    @Test
+    @DisplayName("Delete Test")
+    void testDelete() {
+        Long pno = 2L;
+
+        productRepository.updateToDelete(2L, true);
+    }
+
+    @Test
+    @DisplayName("Update Test")
+    void testUpdate() {
+        Product product = productRepository.selectOne(3L).get();
+
+        product.changePrice(3000);
+
+        product.clearList();
+
+        product.addImageString(UUID.randomUUID() + "_" + "PIMAGE1.jpg");
+        product.addImageString(UUID.randomUUID() + "_" + "PIMAGE2.jpg");
+        product.addImageString(UUID.randomUUID() + "_" + "PIMAGE3.jpg");
 
         productRepository.save(product);
+    }
+
+    @Test
+    @DisplayName("List Test")
+    void testList() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("pno").descending());
+
+        Page<Object[]> result = productRepository.selectList(pageable);
+
+        result.getContent().forEach(arr -> log.info(Arrays.toString(arr)));
+    }
+
+    @Test
+    @DisplayName("Search Test")
+    void testSearch() {
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder().build();
+
+        productRepository.searchList(pageRequestDTO);
     }
 }
