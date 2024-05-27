@@ -21,23 +21,23 @@ public class PageResponseDTO<E> {
     private int totalCount, prevPage, nextPage, totalPage, current;
 
     @Builder(builderMethodName = "withAll")
-    public PageResponseDTO(List<E> dtoList, PageRequestDTO pageRequestDTO, long total) {
+    public PageResponseDTO(List<E> dtoList, PageRequestDTO pageRequestDTO, long totalCount) {
         this.dtoList = dtoList;
         this.pageRequestDTO = pageRequestDTO;
-        this.totalCount = (int) total;
+        this.totalCount = (int) totalCount;
 
         // 끝 페이지 end 계산
         int end = (int) (Math.ceil(pageRequestDTO.getPage() / 10.0)) * 10;
         int start = end - 9;
 
         // 최종 페이지 계산
-        int last = (int) (Math.ceil(totalCount / (double) pageRequestDTO.getSize()));
+        int last = (int) (Math.ceil(this.totalCount / (double) pageRequestDTO.getSize()));
 
         end = end > last ? last : end;
 
         this.prev = start > 1;
 
-        this.next = totalCount > end * pageRequestDTO.getSize();
+        this.next = this.totalCount > end * pageRequestDTO.getSize();
 
         this.pageNumList = IntStream.rangeClosed(start, end).boxed().collect(Collectors.toList());
 
